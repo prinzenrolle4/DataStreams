@@ -16,11 +16,13 @@
  * limitations under the License.
  */
 
-package de.htwk.project;
+package de.htwk.project.api;
 
+import de.htwk.project.api.model.SensorData;
+import de.htwk.project.data.Data;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.windowing.time.Time;
 
 /**
  * Skeleton for a Flink Streaming Job.
@@ -36,13 +38,16 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
  */
 public class StreamingJob {
 
+	private static final Data data = new Data();
+
 	public static void main(String[] args) throws Exception {
 		// set up the streaming execution environment
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-		DataStream<String> dataStream = env.fromElements("STring 1", "String 2");
-		SingleOutputStreamOperator<String> upperCase = dataStream.map(String::toUpperCase);
-		upperCase.print();
+		DataStream<SensorData> dataStream = data.getSensorData(env);
+		dataStream.keyBy(SensorData::getId)
+						.timeWindow(Time.seconds(5));
+		dataStream.print();
 		env.execute("Flink Streaming Java API Skeleton");
 	}
 }

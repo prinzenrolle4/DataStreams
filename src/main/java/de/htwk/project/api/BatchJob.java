@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package de.htwk.project;
+package de.htwk.project.api;
 
 import org.apache.flink.api.java.ExecutionEnvironment;
 
