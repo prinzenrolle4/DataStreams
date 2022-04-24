@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-package de.htwk.project.api;
+package de.htwk.datastreams;
 
-import de.htwk.project.api.model.SensorData;
-import de.htwk.project.data.Data;
+import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.windowing.time.Time;
+
+import java.util.List;
 
 /**
  * Skeleton for a Flink Streaming Job.
@@ -38,16 +38,26 @@ import org.apache.flink.streaming.api.windowing.time.Time;
  */
 public class StreamingJob {
 
-	private static final Data data = new Data();
-
 	public static void main(String[] args) throws Exception {
 		// set up the streaming execution environment
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-		DataStream<SensorData> dataStream = data.getSensorData(env);
-		dataStream.keyBy(SensorData::getId)
-						.timeWindow(Time.seconds(5));
-		dataStream.print();
-		env.execute("Flink Streaming Java API Skeleton");
+		//DataStream<String> lines = env.socketTextStream("localhost", 9999);
+		//DataStream<String> lines = env.readTextFile("file:///path");
+
+
+		DataStream<Person> flintstones = env.fromElements(
+				new Person("Fred", 35),
+				new Person("Wilma", 35),
+				new Person("Pebbles", 2));
+
+		List<String> strings = flintstones
+				.filter(person -> person.getAge() >= 18)
+				.map(Person::getName)
+				.executeAndCollect(100);
+
+		strings.forEach(System.out::println);
+		// execute program
+		//env.execute("Flink Streaming Java API Skeleton");
 	}
 }
