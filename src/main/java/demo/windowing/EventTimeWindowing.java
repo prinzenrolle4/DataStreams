@@ -24,6 +24,7 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
+import scala.Int;
 
 import java.time.Duration;
 
@@ -34,8 +35,9 @@ public class EventTimeWindowing {
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
 		DataStream<Tuple3<Integer, Integer, String>> stream = env.addSource(new SiemSource())
+
+				.map(new SplitMap())
 				.assignTimestampsAndWatermarks(WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofSeconds(1)))
-				.flatMap(new Splitter())
 				.keyBy(t -> t.f0)
 				.window(TumblingEventTimeWindows.of(Time.seconds(1)))
 				.reduce((t1,t2) -> {t1.f1 += t2.f1; t1.f2 += t2.f2; return t1;})
