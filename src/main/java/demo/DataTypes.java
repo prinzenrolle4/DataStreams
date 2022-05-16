@@ -6,6 +6,7 @@ import org.apache.flink.streaming.api.operators.StreamProject;
 import org.apache.flink.streaming.api.windowing.windows.Window;
 
 public class DataTypes<T extends Window, U extends Tuple> {
+
     DataStream<T> dataStream;
     SingleOutputStreamOperator<T> singleOutputStreamOperator;
     WindowedStream<T, T, T> windowedStream;
