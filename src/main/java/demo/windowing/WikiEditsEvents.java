@@ -3,6 +3,7 @@ package demo.windowing;
 import demo.MapToTuple3Function;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.wikiedits.WikipediaEditEvent;
@@ -16,7 +17,7 @@ public class WikiEditsEvents {
                 //.assignTimestampsAndWatermarks(WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofSeconds(1)))
                 .map(new MapToTuple3Function())
                 .keyBy(tuple3 -> tuple3.f0)
-                .window(TumblingProcessingTimeWindows.of(Time.seconds(5)))
+                .window(TumblingEventTimeWindows.of(Time.seconds(5)))
                 .reduce((t1,t2) -> {
                     t1.f1 += t2.f1;
                     return t1;})
