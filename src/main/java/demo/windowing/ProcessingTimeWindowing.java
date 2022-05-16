@@ -13,7 +13,7 @@ public class ProcessingTimeWindowing {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         DataStream<Tuple3<Integer, Integer, String>> stream = env.addSource(new SiemSource())
-                .flatMap(new Splitter())
+                .map(new SplitMap())
                 .keyBy(t -> t.f0)
                 .window(TumblingProcessingTimeWindows.of(Time.seconds(1)))
                 .reduce((t1,t2) -> {t1.f1 += t2.f1; t1.f2 += t2.f2; return t1;})

@@ -34,7 +34,7 @@ public class StreamOperation {
 
         ConnectedStreams<Integer, String> connect = intStream.connect(stringStream);
 
-        connect.map((value, text) -> text + " " + value);
+        //connect.map((value, text) -> text + " " + value);
 
 
         executionEnvironment.execute();
