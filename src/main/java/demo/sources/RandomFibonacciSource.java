@@ -23,7 +23,8 @@ public class RandomFibonacciSource implements SourceFunction<Tuple2<Integer, Int
         while (isRunning && counter < BOUND) {
             int first = rnd.nextInt(BOUND / 2 - 1) + 1;
             int second = rnd.nextInt(BOUND / 2 - 1) + 1;
-            ctx.collectWithTimestamp(new Tuple2<>(first, second), startValue + rnd.nextInt(10000));
+            //ctx.collectWithTimestamp(new Tuple2<>(first, second), startValue + rnd.nextInt(10000));
+            ctx.collect(new Tuple2<>(first, second));
             counter++;
             Thread.sleep(50L);
         }

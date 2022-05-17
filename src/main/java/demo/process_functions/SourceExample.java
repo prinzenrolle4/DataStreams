@@ -19,7 +19,8 @@ public class SourceExample {
 
         executionEnvironment
                 .addSource(new RandomFibonacciSource())
-                .assignTimestampsAndWatermarks(WatermarkStrategy.forBoundedOutOfOrderness(Duration.ofSeconds(2)))
+                .assignTimestampsAndWatermarks(WatermarkStrategy.<Tuple2<Integer, Integer>>forBoundedOutOfOrderness(Duration.ofSeconds(2))
+                        .withTimestampAssigner((event, timestamp) -> event.f0))
                 .map(new MapFunction<Tuple2<Integer, Integer>, Tuple2<Integer, Integer>>() {
                     @Override
                     public Tuple2<Integer, Integer> map(Tuple2<Integer, Integer> element) throws Exception {
