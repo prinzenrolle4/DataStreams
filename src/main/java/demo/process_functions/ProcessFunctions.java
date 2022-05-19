@@ -7,9 +7,21 @@ import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.util.Collector;
 
+import java.util.HashMap;
+import java.util.Optional;
+
 //The processFunction gives direct access and control of the Flink’s state and the Flink’s context.
+//If you want to access keyed state and timers you have to apply the ProcessFunction on a keyed stream:
+// “there is at most one timer per key and timestamp. If multiple timers are registered for the same timestamp, the onTimer method will be called just once.”
 public class ProcessFunctions {
     public static void main(String[] args) throws Exception {
+
+        /**
+         * Link: https://developpaper.com/flinks-datastream-time-and-window-based-operator-processfunction/
+         */
+
+        HashMap<Integer, Long> map = new HashMap<>();
+
         StreamExecutionEnvironment executionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment();
 
         executionEnvironment.fromCollection(MockData.getTemperatureMockData())
@@ -19,29 +31,23 @@ public class ProcessFunctions {
                             @Override
                             public void processElement(Temperature temperature, KeyedProcessFunction<Integer, Temperature, Object>.Context context, Collector<Object> collector) throws Exception {
                                 System.out.println(temperature);
-                                long timer = 0;
                                 long currentWatermark = context.timerService().currentWatermark();
 
-                                if (temperature.getTimestamp() % 2 == 0) {
+                                Optional<Long> key = Optional.ofNullable(map.get(context.getCurrentKey()));
 
-                                    timer = currentWatermark + 3;
+                                key
+                                        .ifPresentOrElse(
+                                                value -> map.put(context.getCurrentKey(), value++),
+                                                () -> map.put(context.getCurrentKey(), 1L)
+                                        );
 
-                                } else {
-
-                                    timer = currentWatermark + 10;
-
-                                }
-                                context.timerService().registerEventTimeTimer(timer);
-
-                                System.out.println("Current watermark " + currentWatermark);
-
-                                System.out.println("Registered timer on " + timer);
+                                context.timerService().registerEventTimeTimer(currentWatermark + 10000);
 
                             }
 
                             @Override
                             public void onTimer(long timestamp, KeyedProcessFunction<Integer, Temperature, Object>.OnTimerContext ctx, Collector<Object> out) throws Exception {
-                                System.out.println("Timer registered at " + timestamp + " has fired");
+                                System.out.println(ctx.getCurrentKey() + " hat Anzahl: " + map.get(ctx.getCurrentKey()));
                             }
                         }).print();
 
