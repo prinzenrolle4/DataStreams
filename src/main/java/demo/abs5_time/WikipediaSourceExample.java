@@ -1,10 +1,11 @@
-package demo;
+package demo.abs5_time;
 
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
+import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.wikiedits.WikipediaEditEvent;
 import org.apache.flink.streaming.connectors.wikiedits.WikipediaEditsSource;
@@ -17,13 +18,14 @@ public class WikipediaSourceExample {
 
         executionEnvironment.addSource(new WikipediaEditsSource())
                         .assignTimestampsAndWatermarks(WatermarkStrategy
-                                    .<WikipediaEditEvent>forBoundedOutOfOrderness(Duration.ofSeconds(2))
-                                    .withTimestampAssigner((wikipediaEditEvent, l) -> wikipediaEditEvent.getTimestamp()))
-                                .map(new MapToTuple2Function())
-                                .keyBy(element -> element.f0)
-                                .window(TumblingEventTimeWindows.of(Time.seconds(5)))
-                                .sum(1)
-                                .print();
+                               .<WikipediaEditEvent>forBoundedOutOfOrderness(Duration.ofSeconds(2))
+                                //wenn Timestamp nicht in source deklariert, muss das mit TimestampAssigner gemacht werden
+                               .withTimestampAssigner((wikipediaEditEvent, l) -> wikipediaEditEvent.getTimestamp()))
+                        .map(new MapToTuple2Function())
+                        .keyBy(element -> element.f0)
+                        .window(TumblingEventTimeWindows.of(Time.seconds(5)))
+                        .sum(1)
+                        .print();
 
         executionEnvironment.execute();
     }

@@ -1,8 +1,9 @@
-package demo.basic_application;
+package demo.abs1_basic_application;
 
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
 
 import java.util.Random;
@@ -20,6 +21,7 @@ public class DemoApplication {
         DataStreamSource<Integer> dataStreamSource = executionEnvironment.addSource(new DemoSource());
         SingleOutputStreamOperator<Integer> newDataStream = dataStreamSource.map(value -> value + 1);
         newDataStream.print();
+        //newDataStream.addSink(new SinkFunction<Integer>() {});
 
         executionEnvironment.execute("Demo Example");
     }

@@ -1,8 +1,9 @@
-package demo.keyed_streams;
+package demo.abs3_keyed_streams;
 
 import demo.data.MockData;
-import demo.sources.Temperature;
+import demo.entity.Temperature;
 import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
@@ -11,7 +12,7 @@ public class KeyedStream {
         StreamExecutionEnvironment executionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment();
 
         //mögliche Funktionen: max(), min(), minBy(), maxBy(), sum(), reduce()
-        //rolling aggregations nur bei endlicher Anzahl an Schlüsseln,
+        // rolling aggregations nur bei endlicher Anzahl an Schlüsseln,
         // da sonst für jeden Key ein State gespeichert wird und diese nie gelöscht werden
 
         executionEnvironment.fromCollection(MockData.getTemperatureMockData())
@@ -21,6 +22,13 @@ public class KeyedStream {
                 .print();
 
         executionEnvironment.execute();
+    }
+
+    private static class Reduce implements ReduceFunction<Tuple3<Long, Integer, Double>> {
+        @Override
+        public Tuple3<Long, Integer, Double> reduce(Tuple3<Long, Integer, Double> longIntegerDoubleTuple3, Tuple3<Long, Integer, Double> t1) throws Exception {
+            return null;
+        }
     }
 
     private static class ToTuple3Mapper implements MapFunction<Temperature, Tuple3<Long, Integer, Double>> {

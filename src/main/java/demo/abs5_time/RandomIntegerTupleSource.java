@@ -1,12 +1,11 @@
-package demo.sources;
-
+package demo.abs5_time;
 
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
 
 import java.util.Random;
 
-public class RandomFibonacciSource implements SourceFunction<Tuple2<Integer, Integer>> {
+public class RandomIntegerTupleSource implements SourceFunction<Tuple2<Integer, Integer>> {
     private static final long serialVersionUID = 1L;
 
     private static final int BOUND = 100;
@@ -23,8 +22,9 @@ public class RandomFibonacciSource implements SourceFunction<Tuple2<Integer, Int
         while (isRunning && counter < BOUND) {
             int first = rnd.nextInt(BOUND / 2 - 1) + 1;
             int second = rnd.nextInt(BOUND / 2 - 1) + 1;
-            //ctx.collectWithTimestamp(new Tuple2<>(first, second), startValue + rnd.nextInt(10000));
-            ctx.collect(new Tuple2<>(first, second));
+
+            // Event wird direkt mit einem Timestamp versehen und an die Pipline geschickt
+            ctx.collectWithTimestamp(new Tuple2<>(first, second), startValue + rnd.nextInt(10000));
             counter++;
             Thread.sleep(50L);
         }

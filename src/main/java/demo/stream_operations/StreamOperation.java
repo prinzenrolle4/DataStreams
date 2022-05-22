@@ -1,16 +1,11 @@
 package demo.stream_operations;
 
 import demo.data.MockData;
-import demo.sources.Temperature;
-import org.apache.flink.api.java.tuple.Tuple3;
-import org.apache.flink.shaded.curator4.com.google.common.collect.Streams;
+import demo.entity.Temperature;
 import org.apache.flink.streaming.api.datastream.ConnectedStreams;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-
-import javax.xml.crypto.Data;
-import java.util.stream.IntStream;
 
 public class StreamOperation {
     public static void main(String[] args) throws Exception {
@@ -25,7 +20,7 @@ public class StreamOperation {
 
 
         DataStream<Temperature> union = unitedStream.union(add).shuffle();
-        SingleOutputStreamOperator<Double> map = union.map(temperature -> temperature.getTemperature());
+        SingleOutputStreamOperator<Double> map = union.map(Temperature::getTemperature);
         //map.
         union.print();
 

@@ -1,9 +1,8 @@
 package demo.data;
 
-import demo.sources.Temperature;
+import demo.entity.Temperature;
 
 import java.util.List;
-import java.util.UUID;
 
 public class MockData {
 

@@ -1,7 +1,7 @@
-package demo.basic_transformations;
+package demo.abs2_basic_transformations;
 
 import demo.data.MockData;
-import demo.sources.Temperature;
+import demo.entity.Temperature;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
