@@ -1,8 +1,7 @@
-package demo.abs8_dataset;
+package demo.abs7_dataset;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.java.ExecutionEnvironment;
-import org.apache.flink.api.java.operators.AggregateOperator;
 import org.apache.flink.api.java.operators.DataSource;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.util.Collector;
@@ -22,7 +21,7 @@ public class WordCountExample {
                 .sum(1)
                 .writeAsCsv("test", "\n", " ");
 
-        executionEnvironment.execute();
+        //executionEnvironment.execute();
     }
 
     private static class SentenceSplitter implements FlatMapFunction<String, Tuple2<String, Integer>> {

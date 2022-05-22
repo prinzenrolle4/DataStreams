@@ -25,7 +25,7 @@ public class WindowStreams {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment streamExecutionEnvironment = StreamExecutionEnvironment.createLocalEnvironment();
 
-        /*streamExecutionEnvironment.<Tuple2<Integer, Integer>>addSource(new DemoSource())
+        streamExecutionEnvironment.<Tuple2<Integer, Integer>>addSource(new DemoSource())
                 .windowAll(TumblingProcessingTimeWindows.of(Time.seconds(5)))
                 .sum(1)
                 .print();
@@ -36,7 +36,7 @@ public class WindowStreams {
                 .aggregate(new AverageAggregate())
                 .map(value -> "Durchschnitt: " + value)
                 .print();
-*/
+
         streamExecutionEnvironment.<Tuple2<Integer, Integer>>addSource(new DemoSource())
                         .keyBy(value -> value.f0)
                         .window(GlobalWindows.create())
