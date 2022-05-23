@@ -2,7 +2,9 @@ package demo.abs4_windowed_streams;
 
 import demo.abs1_basic_application.DemoApplication;
 import org.apache.flink.api.common.ExecutionConfig;
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.typeutils.TypeSerializer;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.WindowAssigner;
 import org.apache.flink.streaming.api.windowing.assigners.WindowStagger;
@@ -21,10 +23,11 @@ public class MyWindowStream {
         StreamExecutionEnvironment streamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment();
 
         streamExecutionEnvironment.<WikipediaEditEvent>addSource(new WikipediaEditsSource())
-                        .keyBy(WikipediaEditEvent::isBotEdit)
+                .<Tuple2<Boolean, Integer>>map(new ToTupleMapper())
+                        .keyBy(event -> event.f0)
                         .window(new MyWindow(Time.seconds(5)))
-                                .max("byteDiff")
-                                        .print();
+                        .max("f1")
+                        .print();
 
         streamExecutionEnvironment.execute();
     }
@@ -67,5 +70,12 @@ public class MyWindowStream {
             return timestamp - (timestamp - offset + windowSize) % windowSize;
         }
 
+    }
+
+    private static class ToTupleMapper implements MapFunction<WikipediaEditEvent, Tuple2<Boolean, Integer>> {
+        @Override
+        public Tuple2<Boolean, Integer> map(WikipediaEditEvent wikipediaEditEvent) throws Exception {
+            return new Tuple2<>(wikipediaEditEvent.isBotEdit(), wikipediaEditEvent.getByteDiff());
+        }
     }
 }

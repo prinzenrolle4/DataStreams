@@ -1,7 +1,7 @@
-package demo.stream_operations;
+package demo.sammlung;
 
-import demo.data.MockData;
-import demo.entity.Temperature;
+import demo.sammlung.data.MockData;
+import demo.sammlung.entity.Temperature;
 import org.apache.flink.streaming.api.datastream.ConnectedStreams;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;

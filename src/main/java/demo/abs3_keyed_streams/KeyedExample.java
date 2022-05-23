@@ -8,6 +8,11 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 public class KeyedExample {
     public static void main(String[] args) throws Exception {
+        /*
+            Berechnen der durchschnittlichen Zeit, welche Nutzer auf einer bestimmten Webseite verbringen.
+         */
+
+
         StreamExecutionEnvironment streamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment();
 
         streamExecutionEnvironment.addSource(new KeyedExampleSource())
@@ -36,7 +41,7 @@ public class KeyedExample {
     private static class MyReduceFunction implements ReduceFunction<Tuple3<String, Double, Integer>> {
         @Override
         public Tuple3<String, Double, Integer> reduce(Tuple3<String, Double, Integer> acc,
-                                                      Tuple3<String, Double, Integer> newEvent) throws Exception {
+                                                      Tuple3<String, Double, Integer> newEvent) {
             return new Tuple3<>(acc.f0, acc.f1 + newEvent.f1, acc.f2 + newEvent.f2);
         }
     }

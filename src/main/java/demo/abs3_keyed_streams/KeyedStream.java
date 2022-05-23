@@ -1,7 +1,7 @@
 package demo.abs3_keyed_streams;
 
-import demo.data.MockData;
-import demo.entity.Temperature;
+import demo.sammlung.data.MockData;
+import demo.sammlung.entity.Temperature;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.java.tuple.Tuple3;

@@ -1,8 +1,7 @@
-package demo.RichFunctionCounter;
+package demo.sammlung;
 
-import demo.abs3_keyed_streams.KeyedExampleSource;
-import demo.data.MockData;
-import demo.entity.Temperature;
+import demo.sammlung.data.MockData;
+import demo.sammlung.entity.Temperature;
 import org.apache.flink.api.common.JobExecutionResult;
 import org.apache.flink.api.common.accumulators.Histogram;
 import org.apache.flink.api.common.accumulators.IntCounter;

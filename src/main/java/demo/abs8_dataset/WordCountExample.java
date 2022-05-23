@@ -1,4 +1,4 @@
-package demo.abs7_dataset;
+package demo.abs8_dataset;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.java.ExecutionEnvironment;

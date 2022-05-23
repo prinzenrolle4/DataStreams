@@ -1,6 +1,6 @@
-package demo.data;
+package demo.sammlung.data;
 
-import demo.entity.Temperature;
+import demo.sammlung.entity.Temperature;
 
 import java.util.List;
 

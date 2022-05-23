@@ -1,4 +1,4 @@
-package demo.join;
+package demo.sammlung.join;
 
 public class TimeObject {
     public Long timestamp;
